@@ -6,18 +6,19 @@ import (
 
 func (r *GormRepository[EntityType]) Query(ctx context.Context,
 	condition Condition[EntityType], /* cond is ptr */
-	extraConfig *CommonConfig) ([]*EntityType, error) {
+	commonConfig *CommonConfig) ([]*EntityType, error) {
 	var model *EntityType
 	gm := r.db.WithContext(ctx).Model(model)
 
-	limit, err := condition.Kvs()
+	kvs := condition.Kvs()
+	dst, err := buildKvs(&kvs)
 	if err != nil {
 		return nil, err
 	}
-	for k, v := range limit {
+	for k, v := range *dst {
 		gm = gm.Where(k, v) // ignore_security_alert
 	}
-	extraConfig.Build(gm)
+	commonConfig.buildKvs(gm)
 
 	var res []*EntityType
 	err = gm.Find(&res).Error
