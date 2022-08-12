@@ -1,7 +1,6 @@
-package main
+package ggorm
 
 import (
-	"fmt"
 	"gorm.io/gorm"
 )
 
@@ -28,26 +27,5 @@ func (cfg *CommonConfig) Build(gm *gorm.DB) {
 
 	if cfg.Limit != nil {
 		gm = gm.Limit(*cfg.Limit)
-	}
-}
-
-func (cfg *CommonConfig) BuildT(gm *gorm.DB) {
-	if cfg == nil {
-		// empty limit
-		return
-	}
-
-	if len(cfg.Orders) != 0 {
-		for k, v := range cfg.Orders {
-			fmt.Println(k, v)
-		}
-	}
-
-	if cfg.Offset != nil {
-		fmt.Println("Offset", *cfg.Offset)
-	}
-
-	if cfg.Limit != nil {
-		fmt.Println("Limit", *cfg.Limit)
 	}
 }
